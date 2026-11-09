@@ -17,4 +17,15 @@ test('Cart cleaned after page refresh', async ({ page }) => {
   2. Use filter({hasText: "ItemName"}) to find the required drink row.
     Do not rely on the exact order of the drinks. 
   */
+
+    await page.goto('https://coffee-cart.app/');
+    await page.getByTestId ('Cappuccino').click();
+    await page.getByLabel ('Cart page').click();
+    await page.waitForURL('https://coffee-cart.app/cart')
+    const cappuccino = page.locator('div').filter({ hasText: /^Cappuccino$/ });
+    await expect(cappuccino).toBeVisible();
+    await page.reload();
+    await expect(cappuccino).toBeHidden();
+    await expect(page.getByText('No coffee, go add some')).toBeVisible();
 });
+

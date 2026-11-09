@@ -20,4 +20,23 @@ test('Cart updated after clicking minus for drinks', async ({ page }) => {
     1. Use filter({hasText: "ItemName"}) to find the required drink row. 
       Do not rely on the exact order of the drinks. 
   */
+
+  await page.goto('https://coffee-cart.app/');
+  await page.getByTestId('Cappuccino').click();
+  await page.getByTestId('Espresso').click();
+  await page.getByLabel('Cart page').click();
+  await page.waitForURL('https://coffee-cart.app/cart');
+  const espresso = page.locator('li.list-item').filter({
+    has: page.getByRole('button', { name: 'Remove one Espresso' })
+});
+  await expect(espresso).toBeVisible();
+  await page.getByRole('button', { name: 'Remove one Espresso' }).click();
+  await expect(page.getByText('Espresso x 1+-')).toBeHidden();
+  const cappuccino = page.locator('li.list-item').filter({
+    has: page.getByRole('button', { name: 'Remove one Cappuccino' })
+});
+await expect(cappuccino).toBeVisible();
+  await page.getByRole('button', { name: 'Remove one Cappuccino' }).click();
+  await expect(page.getByText('Cappuccino x 1+-')).toBeHidden();
+  await expect(page.getByText('No coffee, go add some')).toBeVisible();
 });

@@ -25,4 +25,38 @@ test('Discounted Mocha added to the Cart after promo accepting', async ({
   2. Use filter({hasText: "ItemName"}) to find the required drink row. 
     Do not rely on the exact order of the drinks. 
    */
+  await page.goto('https://coffee-cart.app/');
+
+await page.getByTestId('Cappuccino').click();
+await page.getByTestId('Espresso').click();
+await page.getByTestId('Americano').click();
+
+await expect(
+  page.getByText("It's your lucky day! Get an extra cup of Mocha for $4.")
+).toBeVisible();
+
+await page.getByRole('button', { name: 'Yes, of course!' }).click();
+
+await page.getByLabel('Cart page').click();
+await page.waitForURL('https://coffee-cart.app/cart');
+
+const espresso = page.locator('li.list-item:visible').filter({
+  hasText: 'Espresso'
+});
+await expect(espresso).toContainText('$10.00');
+
+const mocha = page.locator('li.list-item:visible').filter({
+  hasText: 'Mocha'
+});
+await expect(mocha).toContainText('$4.00');
+
+const cappuccino = page.locator('li.list-item:visible').filter({
+  hasText: 'Cappuccino'
+});
+await expect(cappuccino).toContainText('$19.00');
+
+const americano = page.locator('li.list-item:visible').filter({
+  hasText: 'Americano'
+});
+await expect(americano).toContainText('$7.00');
 });
