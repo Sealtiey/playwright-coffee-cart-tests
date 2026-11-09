@@ -1,9 +1,9 @@
-import { expect } from '@playwright/test';
-
 export class MenuPage {
   constructor(page) {
     this.page = page;
   }
 
-  async open() {}
+  async open() {
+    await this.page.goto('https://coffee-cart.app');
+  }
 }
